@@ -9,7 +9,10 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import Badge from "@material-ui/core/Badge";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+
+import AccountButton from "./AccountButton";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,16 +97,6 @@ export function ButtonAppBar({ handleClick, isLoggedIn, clearState, isAdmin }) {
               All Vehicles
             </Button>
 
-            <Button
-              color="inherit"
-              onClick={() => {
-                handleClick();
-                clearState();
-              }}
-            >
-              Logout
-            </Button>
-
             <IconButton
               edge="start"
               className={classes.menuButton}
@@ -112,8 +105,16 @@ export function ButtonAppBar({ handleClick, isLoggedIn, clearState, isAdmin }) {
               component={Link}
               to="/cart"
             >
-              <ShoppingCartIcon />
+              <Badge color="secondary" badgeContent={2}>
+                <ShoppingCartIcon />
+              </Badge>
             </IconButton>
+            <>
+              <AccountButton
+                handleClick={handleClick}
+                clearState={clearState}
+              />
+            </>
           </Toolbar>
         </AppBar>
       </div>
