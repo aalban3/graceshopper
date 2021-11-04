@@ -19,16 +19,25 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 2,
   },
 }));
 
-export function ButtonAppBar({ handleClick, isLoggedIn, clearState, isAdmin }) {
+export function ButtonAppBar({
+  handleClick,
+  isLoggedIn,
+  clearState,
+  isAdmin,
+  username,
+  cart,
+}) {
   const classes = useStyles();
-
+  const numItems = !cart.length
+    ? 0
+    : cart.reduce((acc, item) => acc + item.order_vehicle.quantity, 0);
   // ADMIN NAVBAR
   if (isLoggedIn && isAdmin) {
     return (
@@ -105,16 +114,17 @@ export function ButtonAppBar({ handleClick, isLoggedIn, clearState, isAdmin }) {
               component={Link}
               to="/cart"
             >
-              <Badge color="secondary" badgeContent={2}>
+              <Badge color="secondary" badgeContent={numItems}>
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
-            <>
+            <div>
               <AccountButton
                 handleClick={handleClick}
                 clearState={clearState}
+                username={username}
               />
-            </>
+            </div>
           </Toolbar>
         </AppBar>
       </div>
@@ -171,6 +181,8 @@ const mapState = (state) => {
   return {
     isLoggedIn: !!state.auth.id,
     isAdmin: state.auth.isAdmin,
+    username: state.auth.username,
+    cart: state.cart,
   };
 };
 const mapDispatch = (dispatch) => {

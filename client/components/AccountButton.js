@@ -5,7 +5,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import IconButton from "@material-ui/core/IconButton";
 
 export default function AccountButton(props) {
-  const { handleClick, clearState } = props;
+  const { handleClick, clearState, username } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
@@ -52,8 +52,10 @@ export default function AccountButton(props) {
         onClick={handleProfileMenuOpen}
         color="inherit"
         size="large"
+        className="user-profile"
       >
-        <AccountCircle className="profile-icon" />
+        <AccountCircle />
+        <div className="user-profile-name">{username}</div>
       </IconButton>
       {renderMenu}
     </div>

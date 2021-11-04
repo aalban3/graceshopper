@@ -29,10 +29,13 @@ nav a {
   display: inline-block;
   margin: 1em;
 }
-
-.profile-icon {
-  width: 100% !important;
-  height: 100px;
+.user-profile {
+  display: flex;
+  align-items: center !important;
+  padding-left: 0;
+}
+.user-profile-name {
+  margin-left: 0.5rem;
 }
 .auth-form form {
   padding-top: 5rem;
