@@ -6,7 +6,7 @@
 
 ## Checkout the App
 
-[Deployed to Heroku](http://grace-hopper-motors.herokuapp.com/)
+[Deployed to Heroku](http://gh-motors.herokuapp.com/)
 
 ## Getting Started
 
