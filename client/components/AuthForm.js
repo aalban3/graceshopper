@@ -43,7 +43,7 @@ const AuthForm = (props) => {
         )}
         <div className="auth-container">
           <p className="auth-message">
-            <span>{bottomLinkMessage},</span>
+            <span>{bottomLinkMessage}</span>
             <Link color="primary" to={navLink}>
               {` ${linkName}`}
             </Link>
