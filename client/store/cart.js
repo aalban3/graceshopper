@@ -59,6 +59,7 @@ export const setCart = (token) => {
           authorization: token,
         },
       });
+      console.log("IN HERE");
       dispatch(_setCart(data[0].vehicles));
     } catch (error) {
       console.log("Error fetching cars from server", error);
@@ -167,6 +168,20 @@ export const guestSetCart = () => {
   };
 };
 
+export const updateCart =
+  (orderId, vehicleId, val, token) => async (dispatch) => {
+    try {
+      await axios.put(`/api/orders/add_vehicle`, {
+        orderId: orderId,
+        vehicleId: vehicleId,
+        quantity: val,
+        fromCart: true,
+      });
+      dispatch(setCart(token));
+    } catch (err) {
+      console.debug(err);
+    }
+  };
 //reducer
 export default function (state = [], action) {
   switch (action.type) {

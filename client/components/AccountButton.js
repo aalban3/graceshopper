@@ -29,7 +29,7 @@ export default function AccountButton(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>profile</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose}>profile</MenuItem> */}
       <MenuItem
         onClick={(e) => {
           handleMenuClose(e);
@@ -37,7 +37,7 @@ export default function AccountButton(props) {
           clearState();
         }}
       >
-        logout
+        Sign Out
       </MenuItem>
     </Menu>
   );

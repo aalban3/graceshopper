@@ -1,14 +1,22 @@
 import React from "react";
 import { connect } from "react-redux";
 import { authenticate } from "../store";
-import Button from "react-bootstrap";
+import { Link } from "react-router-dom";
+
+// import Button from "@material-ui/core/Button";
+import Button from "react-bootstrap/Button";
 
 /**
  * COMPONENT
  */
 const AuthForm = (props) => {
   const { name, displayName, handleSubmit, error } = props;
-
+  const bottomLinkMessage =
+    displayName !== "Sign Up"
+      ? "Don't have an account?"
+      : "Already have an account?";
+  const navLink = displayName === "Sign Up" ? "/login" : "/signup";
+  const linkName = displayName === "Sign Up" ? "Sign In" : "Sign Up";
   return (
     <div className="auth-form">
       <form onSubmit={handleSubmit} name={name}>
@@ -25,11 +33,22 @@ const AuthForm = (props) => {
           <input name="password" type="password" />
         </div>
         <div>
-          <button type="submit">{displayName}</button>
+          <Button variant="warning" type="submit">
+            {displayName}
+          </Button>
         </div>
+
         {error && error.response && (
           <div className="login-error"> {error.response.data} </div>
         )}
+        <div className="auth-container">
+          <p className="auth-message">
+            <span>{bottomLinkMessage},</span>
+            <Link color="primary" to={navLink}>
+              {` ${linkName}`}
+            </Link>
+          </p>
+        </div>
       </form>
     </div>
   );
@@ -45,7 +64,7 @@ const AuthForm = (props) => {
 const mapLogin = (state) => {
   return {
     name: "login",
-    displayName: "Login",
+    displayName: "Sign In",
     error: state.auth.error,
   };
 };

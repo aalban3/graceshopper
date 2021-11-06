@@ -18,9 +18,12 @@ body {
   margin: 1rem;
 }
 a {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
+a:hover {
+  color: darkgoldenrod !important;
+}
 label {
   display: block;
 }
@@ -29,10 +32,17 @@ nav a {
   display: inline-block;
   margin: 1em;
 }
+
+.user-profile-name {
+  font-size: 18px;
+}
 .user-profile {
   display: flex;
   align-items: center !important;
   padding-left: 0;
+}
+.user-profile:hover {
+  color: darkgoldenrod;
 }
 .user-profile-name {
   margin-left: 0.5rem;

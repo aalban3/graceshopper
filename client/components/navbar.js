@@ -118,7 +118,7 @@ export function ButtonAppBar({
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>
-            <div>
+            <div className="account-button">
               <AccountButton
                 handleClick={handleClick}
                 clearState={clearState}
@@ -155,11 +155,7 @@ export function ButtonAppBar({
           </Button>
 
           <Button color="inherit" component={Link} to="/login">
-            Login
-          </Button>
-
-          <Button color="inherit" component={Link} to="/signup">
-            Sign Up
+            Sign In
           </Button>
 
           <IconButton

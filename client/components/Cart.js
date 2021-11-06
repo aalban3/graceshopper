@@ -52,9 +52,12 @@ export class Cart extends Component {
 
   render() {
     const cart = this.props.cart || [];
+    const numItems = !cart.length
+      ? 0
+      : cart.reduce((acc, item) => acc + item.order_vehicle.quantity, 0);
     cart.map((element) => (element.vehicleId = parseInt(element.vehicleId)));
     const itemTotal = cart.reduce((acc, curr) => {
-      return acc + curr.price;
+      return acc + curr.order_vehicle.quantity * curr.price;
     }, 0);
     if (this.state.isLoading) {
       return (
@@ -105,8 +108,7 @@ export class Cart extends Component {
             )}
             <div className="cart-total">
               <p>
-                Subtotal ({cart.length}) items:{" "}
-                {priceFormatter.format(itemTotal)}
+                Subtotal ({numItems}) items: {priceFormatter.format(itemTotal)}
               </p>
             </div>
           </div>
@@ -122,7 +124,6 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
-  addCartItems: () => dispatch(addToCart()),
   removeFromCart: (vehicleId, orderId) =>
     dispatch(removeFromCart(vehicleId, orderId)),
   getCart: (id) => dispatch(setCart(id)),

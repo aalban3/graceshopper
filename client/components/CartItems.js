@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { SingleCartItem } from "./SingleCartItem";
+import { connect } from "react-redux";
+import SingleCartItem from "./SingleCartItem";
 
-export default class CartItems extends Component {
-  constructor() {
-    super();
+export class CartItems extends Component {
+  constructor(props) {
+    super(props);
   }
 
   render() {
@@ -35,3 +36,5 @@ export default class CartItems extends Component {
     );
   }
 }
+
+export default connect(null, null)(CartItems);

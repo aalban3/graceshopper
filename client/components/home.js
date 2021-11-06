@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactLoading from "react-loading";
 import { connect } from "react-redux";
-
+import { setCart } from "../store/cart";
 /**
  * COMPONENT
  */
@@ -16,6 +16,10 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    const TOKEN = window.localStorage.getItem("token");
+    if (TOKEN) {
+      this.props.getCart(TOKEN);
+    }
     this.setState({
       isLoading: false,
     });
@@ -107,4 +111,8 @@ const mapState = (state) => {
   };
 };
 
-export default connect(mapState)(Home);
+const mapDispatch = (dispatch) => ({
+  getCart: (id) => dispatch(setCart(id)),
+});
+
+export default connect(mapState, mapDispatch)(Home);

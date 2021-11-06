@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { checkOut, setCheckout, guestCheckOut, guestCheckedOut } from "../../store/checkout";
+import {
+  checkOut,
+  setCheckout,
+  guestCheckOut,
+  guestCheckedOut,
+} from "../../store/checkout";
 import { cartLogout } from "../../store/cart";
 import Button from "react-bootstrap/Button";
 export class Checkout extends Component {
@@ -14,36 +19,32 @@ export class Checkout extends Component {
   }
   componentDidMount() {
     const TOKEN = window.localStorage.getItem("token");
-    if(TOKEN){
+    if (TOKEN) {
       this.props.fetchCart(TOKEN);
-    }else{
+    } else {
       this.props.guesTCheckOut();
     }
-
   }
 
   handleComplete(vehicles) {
     const orderId = window.localStorage.getItem("order_id");
     const TOKEN = window.localStorage.getItem("token");
-    if(TOKEN){
+    if (TOKEN) {
       this.props.checkOutCart(orderId, vehicles, TOKEN);
-    this.props.clearCart();
-    }else{
+      this.props.clearCart();
+    } else {
       this.props.clearGuestCart();
       this.props.clearCart();
-
     }
-
   }
   handleGoBack() {
     this.props.history.push("/cart");
   }
   render() {
-
     const vehicles = this.props.vehicles || [];
     const total =
       vehicles.reduce((acc, curr) => {
-        return acc + curr.price;
+        return acc + curr.order_vehicle.quantity * curr.price;
       }, 0) || 0;
     const priceFormatter = new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -110,7 +111,7 @@ const mapDispatch = (dispatch) => ({
   checkOutCart: (id, items, token) => dispatch(checkOut(id, items, token)),
   fetchCart: (id) => dispatch(setCheckout(id)),
   clearCart: () => dispatch(cartLogout()),
-  guesTCheckOut: () =>dispatch(guestCheckOut()),
-  clearGuestCart:() =>dispatch(guestCheckedOut()),
+  guesTCheckOut: () => dispatch(guestCheckOut()),
+  clearGuestCart: () => dispatch(guestCheckedOut()),
 });
 export default connect(mapState, mapDispatch)(Checkout);

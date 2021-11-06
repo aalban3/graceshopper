@@ -66,7 +66,7 @@ class SingleVehicleScreen extends Component {
 
   render() {
     const { vehicle } = this.props;
-
+    console.log(this.props.cart);
     if (this.state.isLoading) {
       return (
         <div className="loading-screen">
@@ -145,6 +145,7 @@ SingleVehicleScreen.propTypes = {
 const mapState = (state) => ({
   vehicle: state.vehicle,
   auth: state.auth,
+  cart: state.cart,
 });
 
 const mapDispatch = (dispatch) => ({
