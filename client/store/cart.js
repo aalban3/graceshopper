@@ -59,7 +59,6 @@ export const setCart = (token) => {
           authorization: token,
         },
       });
-      console.log("IN HERE");
       dispatch(_setCart(data[0].vehicles));
     } catch (error) {
       console.log("Error fetching cars from server", error);

@@ -6,7 +6,7 @@ import { addToCartThunk, guestAddToCartThunk } from "../store/cart";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
 import ReactLoading from "react-loading";
-
+import VehicleGallery from "./VehicleGallery";
 class SingleVehicleScreen extends Component {
   constructor() {
     super();
@@ -66,8 +66,7 @@ class SingleVehicleScreen extends Component {
 
   render() {
     const { vehicle } = this.props;
-    console.log(this.props.cart);
-    if (this.state.isLoading) {
+    if (vehicle.model === "") {
       return (
         <div className="loading-screen">
           <ReactLoading
@@ -99,7 +98,7 @@ class SingleVehicleScreen extends Component {
           </div>
           <div className="vehicle-card">
             <div className="img-description">
-              <img src={vehicle.imageUrl} />
+              <VehicleGallery vehicle={vehicle.model} />
               <img className="logo-img logo-footer" src={vehicle.logoUrl} />
               <div className="img-description-right">
                 <p className="vechicle-description">{vehicle.description}</p>

@@ -90,31 +90,11 @@
   bottom: 0.6rem;
 }
 
-/* @media (max-width: 960px) {
-  .singlevehicle {
-    flex-direction: column;
-  }
+.vehicle-gallery-img {
+  width: 800px;
+  position: inherit;
+}
 
-  .vehiclescreen_left {
-    flex-direction: column;
-    flex: 1;
-  }
-
-  .left_img {
-    flex: 1;
-  }
-
-  .top_info {
-    flex: 1;
-  }
-
-  .vehiclescreen_right {
-    flex: 1;
-    padding: 1rem;
-  }
-
-  .right_info {
-    width: 100%;
-    margin: 0;
-  }
-} */
+.vehicle-gallery {
+  max-width: 800px;
+}
