@@ -39,7 +39,10 @@ class Routes extends Component {
                   <Route path="/home" component={Home} />
                   <Route path="/vehicles" component={AllVehiclesScreen} />
                   <Route path="/manage_vehicles" component={ManageVehicles} />
-                  <Route path="/manage_users/orders/:orderId" component={ManageSingleOrder} />
+                  <Route
+                    path="/manage_users/orders/:orderId"
+                    component={ManageSingleOrder}
+                  />
                   <Route path="/manage_users" component={ManageUsers} />
                 </Switch>
               )}
@@ -61,7 +64,6 @@ class Routes extends Component {
           <Route path="/cart" component={Cart} />
           <Route path="/checkout" component={Checkout} />
           <Route path="/confirmation" component={CheckoutConfirmation} />
-
         </Switch>
       </div>
     );

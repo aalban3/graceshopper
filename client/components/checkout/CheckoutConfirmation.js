@@ -1,33 +1,25 @@
-import { connect } from "react-redux";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
-
-export function CheckoutConfirmation(props) {
+import { completeOrder } from "../../store/checkout";
+export default function CheckoutConfirmation(props) {
+  const dispatch = useDispatch();
   const handleClick = () => {
     props.history.push("/vehicles");
   };
-  if (!props.isCheckout) {
-    props.history.push("/home");
-    return <></>;
-  }
+  useEffect(() => {
+    dispatch(completeOrder());
+  });
+
   return (
     <div className="checkout-confirmation">
       <div className="conf-container">
         <h1>Order confirmed!</h1>
         <h3>Your beautiful vehicles are on the way!</h3>
         <Button variant="warning" onClick={handleClick}>
-          {" "}
           Continue Shopping
         </Button>
       </div>
     </div>
   );
 }
-
-const mapState = (state) => {
-  return {
-    isCheckout: state.checkout.isReady,
-  };
-};
-
-export default connect(mapState)(CheckoutConfirmation);

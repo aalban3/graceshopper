@@ -2,8 +2,9 @@ const {
   models: { Order, Vehicle, Order_Vehicle },
 } = require("../db");
 const { requireAdminToken, requireToken } = require("../gatekeeping");
+require("dotenv").config();
 const router = require("express").Router();
-
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 //GET /api/orders
 router.get("/all", requireAdminToken, async (req, res, next) => {
   try {
@@ -102,7 +103,6 @@ If quantity === 0, the vehicle will also be removed from order/cart
 }
 */
 router.put("/remove_vehicle", async (req, res, next) => {
-  console.log("reached!!!");
   try {
     const order = await Order.findByPk(+req.body.orderId);
     const vehicle = await Vehicle.findByPk(req.body.vehicleId);
@@ -150,10 +150,46 @@ router.put(
 
 //PUT /api/orders/:orderId/complete
 //updates status of order to 'completed'
-router.put("/:orderId/complete", requireToken, async (req, res, next) => {
+router.put("/:orderId/checkout", requireToken, async (req, res, next) => {
   try {
     const { vehicles } = req.body;
+    let products = [];
+    for (let item of vehicles) {
+      const product = await stripe.products.create({
+        name: item.vehicleName,
+        images: [item.imageUrl],
+      });
+      const price = await stripe.prices.create({
+        product: product.id,
+        unit_amount: item.price * 100,
+        currency: "usd",
+      });
+      products.push({
+        price: price.id,
+        quantity: item.order_vehicle.quantity,
+      });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      line_items: products,
+      payment_method_types: ["card"],
+      mode: "payment",
+      success_url: `${process.env.DOMAIN_URL}/confirmation`,
+      cancel_url: `${process.env.DOMAIN_URL}/checkout`,
+    });
+
+    // test CC 4242 4242 4242 4242
+
+    res.status(200).send({ url: session.url });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.put("/:orderId/complete", requireToken, async (req, res, next) => {
+  try {
     const { id: userId } = req.user;
+    const { vehicles } = req.body;
 
     vehicles.forEach(async (vehicle) => {
       const dBVehicle = await Vehicle.findByPk(vehicle.id);
@@ -167,11 +203,10 @@ router.put("/:orderId/complete", requireToken, async (req, res, next) => {
     // New Order
     const newCart = await Order.create({ userId });
     res.status(200).send(newCart);
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 });
-
 // DELETE /api/orders/:id
 router.delete("/:id", async (req, res, next) => {
   try {

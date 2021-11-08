@@ -1,14 +1,19 @@
 import axios from "axios";
-import history from "../history";
 // Action Types
 const CHECKED_OUT = "CHECKED_OUT";
 const SET_CHECKOUT_ITEMS = "SET_CHECKOUT_ITEMS";
 const ORDERID = "order_id";
 const SET_CHECKOUT = "SET_CHECKOUT";
-
+const READY_FOR_CHECKOUT = "READY_FOR_CHECKOUT";
+import { cartLogout } from "./cart";
 // Action Creators
+export const readyForCheckout = () => {
+  return {
+    type: READY_FOR_CHECKOUT,
+    payload: null,
+  };
+};
 export const checkedOut = () => {
-  history.push("/confirmation");
   return {
     type: CHECKED_OUT,
     checkout: [],
@@ -31,19 +36,50 @@ export const _setCheckout = (cart) => {
 export const checkOut = (orderId, vehicles, token) => {
   return async (dispatch) => {
     try {
-      const { data: order } = await axios.put(
-        `api/orders/${orderId}/complete`,
+      await dispatch(readyForCheckout());
+      const { data } = await axios.put(
+        `api/orders/${orderId}/checkout`,
         {
           vehicles,
         },
         {
           headers: {
             authorization: token,
+            "Access-Control-Allow-Origin": "*",
           },
         }
       );
-      window.localStorage.setItem(ORDERID, order.id);
+
+      window.location.href = data.url;
+    } catch (error) {
+      console.log("Error fetching cars from server", error);
+    }
+  };
+};
+
+export const completeOrder = () => {
+  return async (dispatch, getState) => {
+    try {
+      const { cart } = getState();
+      const TOKEN = window.localStorage.getItem("token");
+      const orderId = window.localStorage.getItem("order_id");
+
+      const { data } = await axios.put(
+        `api/orders/${orderId}/complete`,
+        {
+          vehicles: cart,
+        },
+        {
+          headers: {
+            authorization: TOKEN,
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+
+      window.localStorage.setItem(ORDERID, data.id);
       dispatch(checkedOut());
+      dispatch(cartLogout());
     } catch (error) {
       console.log("Error fetching cars from server", error);
     }
@@ -79,7 +115,6 @@ export const guestCheckOut = () => {
         cart.push(singlecar);
         dispatch(guestSetCheckout(cart));
       }
-      console.log(cart);
     } catch (error) {
       console.log("Error fetching cars from server", error);
     }
@@ -132,8 +167,10 @@ const initialState = {
 };
 export default function (state = initialState, action) {
   switch (action.type) {
+    case READY_FOR_CHECKOUT:
+      return { ...state, isReady: true };
     case CHECKED_OUT:
-      return { ...state, vehicles: action.checkout, isReady: true };
+      return { ...state, vehicles: action.checkout, isReady: false };
     case SET_CHECKOUT_ITEMS:
       return {
         ...state,

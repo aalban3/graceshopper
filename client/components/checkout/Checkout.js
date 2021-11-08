@@ -31,7 +31,6 @@ export class Checkout extends Component {
     const TOKEN = window.localStorage.getItem("token");
     if (TOKEN) {
       this.props.checkOutCart(orderId, vehicles, TOKEN);
-      this.props.clearCart();
     } else {
       this.props.clearGuestCart();
       this.props.clearCart();
@@ -41,6 +40,7 @@ export class Checkout extends Component {
     this.props.history.push("/cart");
   }
   render() {
+    const orderId = window.localStorage.getItem("order_id");
     const vehicles = this.props.vehicles || [];
     const total =
       vehicles.reduce((acc, curr) => {
@@ -89,9 +89,10 @@ export class Checkout extends Component {
             <big>Total: {priceFormatter.format(total)}</big>
             <Button
               variant="success"
+              type="submit"
               onClick={() => this.handleComplete(vehicles)}
             >
-              Confirm Order
+              Proceed to payment
             </Button>
           </div>
         </div>
