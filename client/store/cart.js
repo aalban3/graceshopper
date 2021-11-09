@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { ORDERID } from "./auth";
 // Action Types
 const ADD_TO_CART = "ADD_TO_CART";
 const REMOVE_FROM_CART = "REMOVE_FROM_CART";
@@ -54,11 +54,12 @@ export const removeFromCart = (vehicleId, orderId) => {
 export const setCart = (token) => {
   return async (dispatch) => {
     try {
-      const { data } = await axios.get(`api/users/orders`, {
+      const { data } = await axios.get(`/api/users/orders`, {
         headers: {
           authorization: token,
         },
       });
+      window.localStorage.setItem(ORDERID, data[0].id);
       dispatch(_setCart(data[0].vehicles));
     } catch (error) {
       console.log("Error fetching cars from server", error);

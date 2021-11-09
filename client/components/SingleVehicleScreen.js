@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { getSingleVehicleThunk } from "../store/singleVehicle";
 import { withSnackbar } from "notistack";
-import { addToCartThunk, guestAddToCartThunk } from "../store/cart";
+import { addToCartThunk, guestAddToCartThunk, setCart } from "../store/cart";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
 import ReactLoading from "react-loading";
 import VehicleGallery from "./VehicleGallery";
+const TOKEN = window.localStorage.getItem("token");
 class SingleVehicleScreen extends Component {
   constructor() {
     super();
@@ -21,6 +22,20 @@ class SingleVehicleScreen extends Component {
   }
 
   handleSnackbar() {
+    const { cart } = this.props;
+    const currentVehicle = cart.find(
+      (item) => +item.id === +this.props.match.params.id
+    );
+    if (currentVehicle && currentVehicle.order_vehicle.quantity === 3) {
+      this.key = this.props.enqueueSnackbar(
+        "Cannot add any more of this vehicle!",
+        {
+          variant: "warning",
+        }
+      );
+
+      return;
+    }
     if (this.props.vehicle.quantity < this.state.quantity) {
       this.key = this.props.enqueueSnackbar("Not enough vehicles in stock!", {
         variant: "error",
@@ -36,6 +51,7 @@ class SingleVehicleScreen extends Component {
   }
   componentDidMount() {
     this.props.getSingleVehicle(this.props.match.params.id);
+    this.props.setcart(TOKEN);
     this.setState({
       isLoading: false,
     });
@@ -43,20 +59,17 @@ class SingleVehicleScreen extends Component {
 
   handleAddCartItem(evt) {
     evt.preventDefault();
+    const { cart } = this.props;
+    const vehicleId = this.props.match.params.id;
+    const currentVehicle = cart.find((item) => +item.id === +vehicleId);
+    if (currentVehicle && currentVehicle.order_vehicle.quantity === 3) {
+      return;
+    }
     const orderId = window.localStorage.getItem("order_id");
-    const token = window.localStorage.getItem("token");
-    if (token) {
-      this.props.addNewToCart(
-        orderId,
-        this.props.match.params.id,
-        this.state.quantity,
-        token
-      );
+    if (TOKEN) {
+      this.props.addNewToCart(orderId, vehicleId, this.state.quantity, TOKEN);
     } else {
-      this.props.guestAddToCart(
-        this.props.match.params.id,
-        this.state.quantity
-      );
+      this.props.guestAddToCart(vehicleId, this.state.quantity);
     }
   }
 
@@ -66,6 +79,7 @@ class SingleVehicleScreen extends Component {
 
   render() {
     const { vehicle } = this.props;
+
     if (vehicle.model === "") {
       return (
         <div className="loading-screen">
@@ -148,6 +162,7 @@ const mapState = (state) => ({
 });
 
 const mapDispatch = (dispatch) => ({
+  setcart: (token) => dispatch(setCart(token)),
   getSingleVehicle: (id) => dispatch(getSingleVehicleThunk(id)),
   addNewToCart: (orderId, vehicleId, quantity, token) =>
     dispatch(addToCartThunk(orderId, vehicleId, quantity, token)),

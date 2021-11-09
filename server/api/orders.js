@@ -60,10 +60,10 @@ router.get("/:id", async (req, res, next) => {
     "fromCart": true
 }
 */
-router.put("/add_vehicle", async (req, res, next) => {
+router.put("/add_vehicle", requireToken, async (req, res, next) => {
   try {
     const quantity = req.body.quantity;
-    const userId = req.body.userId;
+    const userId = req.user.id;
     const vehicle = await Vehicle.findByPk(req.body.vehicleId);
     const order = await Order.findByPk(req.body.orderId);
     const currentVehicles = await order.getVehicles();

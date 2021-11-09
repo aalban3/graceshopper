@@ -1,9 +1,9 @@
 import axios from "axios";
 import history from "../history";
-
+import { setCart } from "./cart";
 const TOKEN = "token";
 const ID = "id";
-const ORDERID = "order_id";
+export const ORDERID = "order_id";
 
 /**
  * ACTION TYPES
@@ -20,40 +20,35 @@ const setAuth = (auth) => ({ type: SET_AUTH, auth });
  */
 
 export const me = () => async (dispatch) => {
-  const token = window.localStorage.getItem(TOKEN);
-  if (token) {
-    const res = await axios.get("/auth/me", {
-      headers: {
-        authorization: token,
-      },
-    });
-
-    const { data: orders } = await axios.get(`api/users/orders`, {
-      headers: {
-        authorization: token,
-      },
-    });
-
-    if (orders[0] !== undefined)
-      window.localStorage.setItem(ORDERID, orders[0].id);
-
-    return dispatch(setAuth(res.data));
-  }
-};
-
-export const authenticate = (username, password, method, history) => async (
-  dispatch
-) => {
   try {
-    const res = await axios.post(`/auth/${method}`, { username, password });
-    window.localStorage.setItem(TOKEN, res.data.token);
-    dispatch(me());
-    history.push("/home");
-  } catch (authError) {
-    history.push(`/${method}`);
-    return dispatch(setAuth({ error: authError }));
+    const token = window.localStorage.getItem(TOKEN);
+    if (token) {
+      const res = await axios.get("/auth/me", {
+        headers: {
+          authorization: token,
+        },
+      });
+
+      dispatch(setCart(token));
+      dispatch(setAuth(res.data));
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
+
+export const authenticate =
+  (username, password, method, history) => async (dispatch) => {
+    try {
+      const res = await axios.post(`/auth/${method}`, { username, password });
+      window.localStorage.setItem(TOKEN, res.data.token);
+      dispatch(me());
+      history.push("/home");
+    } catch (authError) {
+      history.push(`/${method}`);
+      return dispatch(setAuth({ error: authError }));
+    }
+  };
 
 export const logout = () => {
   window.localStorage.removeItem(TOKEN);
