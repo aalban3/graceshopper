@@ -107,7 +107,7 @@ const vehicles = [
     make: "Jobiult",
     model: "P-996 Lazer",
     class: "planes",
-    price: 1500000,
+    price: 990000,
     quantity: 3,
     logoUrl:
       "https://vignette.wikia.nocookie.net/gtawiki/images/6/6e/Name-IV-Jobuilt.png/revision/latest/scale-to-width-down/210",
@@ -172,7 +172,7 @@ const vehicles = [
     make: "Benefactor",
     model: "Dubsta 6X6",
     class: "offroad",
-    price: 1500000,
+    price: 350000,
     quantity: 3,
     logoUrl:
       "https://vignette.wikia.nocookie.net/gtawiki/images/1/1d/Benefactor-GTAO-Logo.png/revision/latest/scale-to-width-down/210",

@@ -22,13 +22,17 @@ class SingleVehicleScreen extends Component {
   }
 
   handleSnackbar() {
-    const { cart } = this.props;
+    const { cart, vehicle } = this.props;
     const currentVehicle = cart.find(
       (item) => +item.id === +this.props.match.params.id
     );
-    if (currentVehicle && currentVehicle.order_vehicle.quantity === 3) {
+
+    if (
+      currentVehicle &&
+      currentVehicle.order_vehicle.quantity + this.state.quantity > 3
+    ) {
       this.key = this.props.enqueueSnackbar(
-        "Cannot add any more of this vehicle!",
+        `We only allow 3 ${vehicle.vehicleName} per order. Current cart (${currentVehicle.order_vehicle.quantity}). `,
         {
           variant: "warning",
         }
@@ -62,7 +66,10 @@ class SingleVehicleScreen extends Component {
     const { cart } = this.props;
     const vehicleId = this.props.match.params.id;
     const currentVehicle = cart.find((item) => +item.id === +vehicleId);
-    if (currentVehicle && currentVehicle.order_vehicle.quantity === 3) {
+    if (
+      currentVehicle &&
+      currentVehicle.order_vehicle.quantity + this.state.quantity > 3
+    ) {
       return;
     }
     const orderId = window.localStorage.getItem("order_id");

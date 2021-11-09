@@ -19,13 +19,15 @@ class SingleCartItem extends Component {
   async handleQtyChange(evt) {
     this.setState({ quantity: +evt.target.value });
     let token = window.localStorage.getItem("token");
+    let orderId = window.localStorage.getItem("order_id");
+
     if (!token) {
       let guestCart = JSON.parse(window.localStorage.getItem("GUESTCART"));
       guestCart[0].quantity = Number(evt.target.value);
       window.localStorage.setItem("GUESTCART", JSON.stringify(guestCart));
     } else {
       this.props.updateCart(
-        +this.props.orderId,
+        orderId,
         this.props.vehicle.id,
         +evt.target.value,
         token

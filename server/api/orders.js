@@ -60,10 +60,9 @@ router.get("/:id", async (req, res, next) => {
     "fromCart": true
 }
 */
-router.put("/add_vehicle", requireToken, async (req, res, next) => {
+router.put("/add_vehicle", async (req, res, next) => {
   try {
     const quantity = req.body.quantity;
-    const userId = req.user.id;
     const vehicle = await Vehicle.findByPk(req.body.vehicleId);
     const order = await Order.findByPk(req.body.orderId);
     const currentVehicles = await order.getVehicles();
@@ -159,9 +158,10 @@ router.put("/:orderId/checkout", requireToken, async (req, res, next) => {
         name: item.vehicleName,
         images: [item.imageUrl],
       });
+      const itemPrice = item.price;
       const price = await stripe.prices.create({
         product: product.id,
-        unit_amount: item.price * 100,
+        unit_amount: itemPrice * 100,
         currency: "usd",
       });
       products.push({
