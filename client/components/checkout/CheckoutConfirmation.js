@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Button from "react-bootstrap/Button";
 import { completeOrder } from "../../store/checkout";
 export default function CheckoutConfirmation(props) {
@@ -9,7 +9,7 @@ export default function CheckoutConfirmation(props) {
   };
   useEffect(() => {
     dispatch(completeOrder());
-  });
+  }, []);
 
   return (
     <div className="checkout-confirmation">
